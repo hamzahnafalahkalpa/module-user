@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Hanafalah\ModuleUser\Contracts\Schemas\UserReference as ContractsUserReference;
 use Hanafalah\ModuleUser\Contracts\Data\UserReferenceData;
 use Hanafalah\ModuleUser\Supports\BaseModuleUser;
+use Illuminate\Support\Str;
 
 class UserReference extends BaseModuleUser implements ContractsUserReference
 {
@@ -27,8 +28,19 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
 
 
     public function prepareStoreUserReference(UserReferenceData $user_reference_dto): Model{
+        $reference_type   = $user_reference_dto->reference_type;
+        $reference_schema = config('module-user.user_reference_types.'.Str::snake($reference_type).'.schema');        
+        if (isset($reference_schema) && isset($user_reference_dto->reference)) {
+            $schema_reference = $this->schemaContract(Str::studly($reference_schema));
+            $reference        = $schema_reference->prepareStore($user_reference_dto->reference);
+            $user_reference_model = $reference->userReference;
+            $user_reference_dto->reference_id = $reference->getKey();
+            $user_reference_dto->id   = $user_reference_model->getKey();
+            $user_reference_dto->uuid = $user_reference_model->uuid;
+        }
+
         if (isset($user_reference_dto->id) || isset($user_reference_dto->uuid)) {
-            $user_reference = $this->UserReferenceModel()
+            $user_reference = $user_reference_model ?? $this->UserReferenceModel()
                 ->when(isset($user_reference_dto->uuid),function($query) use ($user_reference_dto){
                     return $query->where('uuid',$user_reference_dto->uuid);
                 })
@@ -36,6 +48,7 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
                     return $query->where('id', $user_reference_dto->id);
                 })
                 ->firstOrFail();            
+            $user_reference->user_id   ??= $user_reference_dto->user_id ?? null;
             $user_reference->workspace_id   ??= $user_reference_dto->workspace_id ?? null;
             $user_reference->workspace_type ??= $user_reference_dto->workspace_type ?? null;
         }else{
@@ -54,14 +67,17 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
             $user_reference->syncRoles($user_reference_dto->role_ids);
         } else {
             $user_reference->roles()->detach();
-            $user_reference->prop_role['id']   = null;
-            $user_reference->prop_role['name']   = null;
+            $user_reference->setAttribute('prop_role', [
+                'id'   => null,
+                'name' => null
+            ]);
         }
         if (isset($user_reference_dto->user)){
             $user_reference_dto->user->id ??= $user_reference_dto->user_id ?? null;
             $user_model = $this->schemaContract('user')->prepareStoreUser($user_reference_dto->user);
             $user_reference->user_id ??= $user_model->getKey();
         }
+        $this->fillingProps($user_reference,$user_reference_dto->props);
         $user_reference->save();
         return $this->user_reference_model = $user_reference;
     }

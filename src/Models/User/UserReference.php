@@ -44,7 +44,7 @@ class UserReference extends BaseModel
     }
 
     public function showUsingRelation(): array{
-        return ['reference','workspace'];
+        return ['user','reference','workspace'];
     }
 
     public function getViewResource(){

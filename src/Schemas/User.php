@@ -2,7 +2,6 @@
 
 namespace Hanafalah\ModuleUser\Schemas;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Hanafalah\ModuleUser\Concerns\User\UserValidation;
@@ -10,7 +9,6 @@ use Hanafalah\ModuleUser\Contracts\Schemas\User as ContractsUser;
 use Hanafalah\ModuleUser\Contracts\Data\ChangePasswordData;
 use Hanafalah\ModuleUser\Contracts\Data\UserData;
 use Hanafalah\ModuleUser\Supports\BaseModuleUser;
-use Hanafalah\ModuleWarehouse\Models\ModelHasRoom\ModelHasRoom;
 
 class User extends BaseModuleUser implements ContractsUser
 {

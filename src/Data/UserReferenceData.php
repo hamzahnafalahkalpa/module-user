@@ -56,6 +56,10 @@ class UserReferenceData extends Data implements DataUserReferenceData{
     #[MapName('roles')]
     #[WithTransformer(RoleDataTransformer::class)]
     public ?array $roles = [];
+
+    #[MapInputName('props')]
+    #[MapName('props')]
+    public ?array $props = null;
     
     public static function before(array &$attributes){
         $new = static::new();

@@ -6,18 +6,19 @@ namespace Hanafalah\ModuleUser\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Hanafalah\ApiHelper\Concerns\Token\HasApiTokens;
+use Hanafalah\LaravelHasProps\Concerns\HasProps;
 use Hanafalah\ModuleUser\Resources\ShowUser;
 use Hanafalah\ModuleUser\Resources\ViewUser;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class User extends Authenticatable
 {
-    use HasUlids, HasFactory, Notifiable, HasApiTokens;
+    use HasUlids, HasFactory, Notifiable, HasApiTokens, HasProps;
 
     public $incrementing  = false;
     protected $keyType    = 'string';
     protected $primaryKey = 'id';
-    protected $fillable   = ['username', 'email', 'password'];
+    protected $fillable   = ['id','username', 'email_verified_at', 'email', 'password','props'];
     protected $hidden     = ['password', 'remember_token'];
 
     protected $casts = [
@@ -33,12 +34,14 @@ class User extends Authenticatable
 
     public function showUsingRelation(): array{
         return [
-            'userReference'
+            'userReference',"userReferences"
         ];
     }
 
     public function viewUsingRelation(): array{
-        return [];
+        return [
+            'userReference'
+        ];
     }
 
     public function getViewResource(){

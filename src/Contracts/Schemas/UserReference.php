@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method Collection prepareViewUserReferenceList(? array $attributes = null)
  * @method LengthAwarePaginator prepareViewUserReferencePaginate(PaginateData $paginate_dto)
  * @method array viewUserReferencePaginate(?PaginateData $paginate_dto = null)
+ * @method array showUserReference(?Model $model = null)
  * @method Builder function userReference(mixed $conditionals = null)
  */
 interface UserReference extends DataManagement {

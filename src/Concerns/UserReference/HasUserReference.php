@@ -9,7 +9,6 @@ trait HasUserReference
             $user_reference = $query->userReference()->firstOrCreate();
             $query->uuid = $user_reference->uuid;
             $query->save();
-            // static::withoutEvents(function() use ($query) { $query->save(); });
         });
     }
 

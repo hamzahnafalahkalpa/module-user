@@ -46,4 +46,8 @@ class UserData extends Data implements DataUserData{
     #[MapInputName('user_reference')]
     #[MapName('user_reference')]
     public ?UserReferenceData $user_reference = null;
+
+    #[MapInputName('props')]
+    #[MapName('props')]
+    public ?array $props = null;
 }

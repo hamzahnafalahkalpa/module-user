@@ -9,7 +9,13 @@ class ShowUser extends ViewUser
 {
     public function toArray(Request $request): array
     {
-        $arr = [];
+        $arr = [
+            'user_references' => $this->relationValidation('userReferences', function () {
+                return $this->userReferences->transform(function ($userReference) {
+                    return $userReference->toViewApi();
+                });
+            })
+        ];
         $arr = $this->mergeArray(parent::toArray($request), $arr);
         return $arr;
     }
