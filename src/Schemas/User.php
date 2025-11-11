@@ -44,6 +44,8 @@ class User extends BaseModuleUser implements ContractsUser
                  ->prepareStoreUserReference($user_reference);
         }
 
+        $this->fillingProps($user, $user_dto->props);
+        $user->save();
         return $this->user_model = $user;
     }
 
