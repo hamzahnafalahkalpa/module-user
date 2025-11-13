@@ -71,9 +71,12 @@ class UserReferenceData extends Data implements DataUserReferenceData{
             $config_keys = array_keys(config('module-user.user_reference_types'));
             $keys        = array_intersect(array_keys($attributes),$config_keys);
             $key         = array_shift($keys);
+
             $attributes['reference_type'] ??= $key;
         }
-        $attributes['reference_type'] = Str::studly($attributes['reference_type']);
+        if (isset($attributes['reference_type'])){
+            $attributes['reference_type'] = Str::studly($attributes['reference_type']);
+        }
     }
 
     public static function after(UserReferenceData $data): UserReferenceData{
