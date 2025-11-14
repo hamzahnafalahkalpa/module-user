@@ -20,7 +20,7 @@ class UserData extends Data implements DataUserData{
     
     #[MapInputName('username')]
     #[MapName('username')]
-    public string $username;
+    public ?string $username = null;
     
     #[MapInputName('password')]
     #[MapName('password')]
@@ -36,7 +36,7 @@ class UserData extends Data implements DataUserData{
     #[MapName('email')]
     #[Email]
     #[Unique('users', 'email')]
-    public string $email;
+    public ?string $email = null;
 
     #[MapInputName('email_verified_at')]
     #[MapName('email_verified_at')]

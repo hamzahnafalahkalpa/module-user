@@ -42,9 +42,13 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
         }
 
         if (isset($user_reference_dto->user)){
-            $user_reference_dto->user->id ??= $user_reference_dto->user_id ?? null;
-            $user_model = $this->schemaContract('user')->prepareStoreUser($user_reference_dto->user);
-            $user_reference_dto->user_id ??= $user_model->getKey();
+            $user = &$user_reference_dto->user;
+            $user->id ??= $user_reference_dto->user_id ?? null;
+            if (isset($user->username) && isset($user->email)){
+                if (isset($user->email)) $user->email = strtolower($user->email);
+                $user_model = $this->schemaContract('user')->prepareStoreUser($user);
+                $user_reference_dto->user_id ??= $user_model->getKey();
+            }
         }
 
         if (isset($user_reference_dto->id) || isset($user_reference_dto->uuid)) {
