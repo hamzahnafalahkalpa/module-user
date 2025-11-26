@@ -28,7 +28,7 @@ class UserReference extends BaseModel
         return ['reference_type', 'reference_id', 'user_id'];
     }
 
-    protected $fillable = [
+    protected $list = [
         'id','uuid','reference_type','reference_id',
         'user_id','workspace_type','workspace_id','current'
     ];
@@ -38,6 +38,13 @@ class UserReference extends BaseModel
             'id','name'
         ]
     ];
+
+    protected static function booted(): void{
+        parent::booted();
+        static::creating(function ($model) {
+            $model->uuid ??= \Illuminate\Support\Str::orderedUuid()->toString();
+        });
+    }
 
     public function viewUsingRelation(): array{
         return [];
