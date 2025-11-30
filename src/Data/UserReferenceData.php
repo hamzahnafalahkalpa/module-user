@@ -28,10 +28,6 @@ class UserReferenceData extends Data implements DataUserReferenceData{
     #[MapName('user')]
     public ?UserData $user = null;
 
-    #[MapInputName('user_model')]
-    #[MapName('user_model')]
-    public ?object $user_model = null;
-
     #[MapInputName('reference_type')]
     #[MapName('reference_type')]
     public ?string $reference_type = null;
@@ -43,10 +39,6 @@ class UserReferenceData extends Data implements DataUserReferenceData{
     #[MapInputName('reference')]
     #[MapName('reference')]
     public null|object|array $reference = null;
-
-    #[MapInputName('reference_model')]
-    #[MapName('reference_model')]
-    public ?object $reference_model = null;
 
     #[MapInputName('workspace_type')]
     #[MapName('workspace_type')]

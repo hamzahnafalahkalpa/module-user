@@ -34,14 +34,11 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
             if (isset($reference_schema) && isset($user_reference_dto->reference)) {
                 $schema_reference = $this->schemaContract(Str::studly($reference_schema));
                 $reference        = $schema_reference->prepareStore($user_reference_dto->reference);
+                $user_reference_model = $reference->userReference;
                 $user_reference_dto->reference_id = $reference->getKey();
+                $user_reference_dto->id   = $user_reference_model->getKey();
+                $user_reference_dto->uuid = $user_reference_model->uuid;
             }
-        }
-
-        if (isset($user_reference_dto->reference_model)){
-            $reference = $user_reference_dto->reference_model;
-            $user_reference_dto->reference_type = $reference->getMorphClass();
-            $user_reference_dto->reference_id   = $reference->getKey();
         }
 
         if (isset($user_reference_dto->user)){
@@ -53,6 +50,7 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
                 $user_reference_dto->user_id ??= $user_model->getKey();
             }
         }
+
         if (isset($user_reference_dto->id) || isset($user_reference_dto->uuid)) {
             $user_reference = $user_reference_model ?? $this->UserReferenceModel()
                 ->when(isset($user_reference_dto->uuid),function($query) use ($user_reference_dto){
@@ -61,21 +59,19 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
                 ->when(isset($user_reference_dto->id),function($query) use ($user_reference_dto){
                     return $query->where('id', $user_reference_dto->id);
                 })
-                ->firstOrFail(); 
-            $user_reference_dto->user_id   ??= $user_reference_dto->user_id ?? null;
-            $user_reference_dto->workspace_id   ??= $user_reference_dto->workspace_id ?? null;
-            $user_reference_dto->workspace_type ??= $user_reference_dto->workspace_type ?? null;
+                ->firstOrFail();            
+            $user_reference->user_id   ??= $user_reference_dto->user_id ?? null;
+            $user_reference->workspace_id   ??= $user_reference_dto->workspace_id ?? null;
+            $user_reference->workspace_type ??= $user_reference_dto->workspace_type ?? null;
         }else{
             $guard = [
-                'user_id'        => $user_reference_dto->user_model?->id ?? $user_reference_dto->user_id,
+                'user_id'        => $user_reference_dto->user_id,
                 'reference_type' => $user_reference_dto->reference_type,
                 'reference_id'   => $user_reference_dto->reference_id,
-            ];
-            $add = [
                 'workspace_type' => $user_reference_dto->workspace_type,
                 'workspace_id'   => $user_reference_dto->workspace_id
             ];
-            $user_reference = $this->usingEntity()->updateOrCreate($guard,$add);
+            $user_reference = $this->usingEntity()->updateOrCreate($guard);
         }
         if (isset($user_reference_dto->roles) && count($user_reference_dto->roles) > 0) {
             $role = end($user_reference_dto->roles);
@@ -88,6 +84,7 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
                 'name' => null
             ]);
         }
+
         $this->fillingProps($user_reference,$user_reference_dto->props);
         $user_reference->save();
         return $this->user_reference_model = $user_reference;

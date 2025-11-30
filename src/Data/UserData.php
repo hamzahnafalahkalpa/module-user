@@ -41,7 +41,7 @@ class UserData extends Data implements DataUserData{
     #[MapInputName('email_verified_at')]
     #[MapName('email_verified_at')]
     #[WithTransformer(DateTimeInterfaceTransformer::class)]
-    public ?string $email_verified_at = null;
+    public ?Carbon $email_verified_at = null;
 
     #[MapInputName('user_reference')]
     #[MapName('user_reference')]
