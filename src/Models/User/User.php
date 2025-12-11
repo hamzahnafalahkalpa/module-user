@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class User extends Authenticatable
 {
-    use HasUlids, HasFactory, Notifiable, HasApiTokens, HasProps;
+    use HasUlids, HasFactory, Notifiable, 
+        HasApiTokens, HasProps;
 
     public $incrementing  = false;
     protected $keyType    = 'string';
@@ -34,13 +35,20 @@ class User extends Authenticatable
 
     public function showUsingRelation(): array{
         return [
-            'userReference',"userReferences"
+            'userReference' => function($q){
+                $q->with(['roles','role']);
+            },
+            "userReferences" => function($q){
+                $q->with(['role']);
+            }
         ];
     }
 
     public function viewUsingRelation(): array{
         return [
-            'userReference'
+            'userReference' => function($q){
+                $q->with(['roles','role']);
+            }
         ];
     }
 
@@ -56,6 +64,7 @@ class User extends Authenticatable
     public function userReference(){
         return $this->hasOneModel('UserReference');
     }
+
     public function userReferences(){
         return $this->hasManyModel('UserReference');
     }
