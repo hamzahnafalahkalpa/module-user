@@ -34,10 +34,10 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
             if (isset($reference_schema) && isset($user_reference_dto->reference)) {
                 $schema_reference = $this->schemaContract(Str::studly($reference_schema));
                 $reference        = $schema_reference->prepareStore($user_reference_dto->reference);
-                $user_reference_model = $reference->userReference;
-                $user_reference_dto->reference_id = $reference->getKey();
-                $user_reference_dto->id   = $user_reference_model->getKey();
-                $user_reference_dto->uuid = $user_reference_model->uuid;
+                // $user_reference_model = $reference->userReference;
+                // $user_reference_dto->reference_id = $reference->getKey();
+                // $user_reference_dto->id   = $user_reference_model->getKey();
+                // $user_reference_dto->uuid = $user_reference_model->uuid;
             }
         }
 
