@@ -28,6 +28,10 @@ class UserReferenceData extends Data implements DataUserReferenceData{
     #[MapName('user')]
     public ?UserData $user = null;
 
+    #[MapInputName('user_reference_model')]
+    #[MapName('user_reference_model')]
+    public ?object $user_reference_model = null;
+
     #[MapInputName('reference_type')]
     #[MapName('reference_type')]
     public ?string $reference_type = null;

@@ -54,7 +54,7 @@ class UserReference extends BaseModuleUser implements ContractsUserReference
         }
 
         if (isset($user_reference_dto->id) || isset($user_reference_dto->uuid)) {
-            $user_reference = $user_reference_model ?? $this->UserReferenceModel()
+            $user_reference = $user_reference_model ?? $user_reference_dto->user_reference_model ?? $this->UserReferenceModel()
                 ->when(isset($user_reference_dto->uuid),function($query) use ($user_reference_dto){
                     return $query->where('uuid',$user_reference_dto->uuid);
                 })
