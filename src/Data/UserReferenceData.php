@@ -85,6 +85,7 @@ class UserReferenceData extends Data implements DataUserReferenceData{
 
     public static function after(UserReferenceData $data): UserReferenceData{
         $new = static::new();
+        $props = &$data->props;
         if (isset($data->reference)){
             $reference = &$data->reference;
             $reference = self::transformToData($data->reference_type, $reference);
@@ -98,6 +99,7 @@ class UserReferenceData extends Data implements DataUserReferenceData{
 
         if(!empty($data->role_ids)){
             $data->roles = $data->fetchRolesFromIds($data->role_ids);
+            $props['role_ids'] = $data->role_ids;
         }
         if (empty($data->role_ids) && count($data->roles) > 0){
             $data->role_ids = \array_column($data->roles,'id');
